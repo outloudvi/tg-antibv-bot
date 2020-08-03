@@ -1,0 +1,19 @@
+{
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.1.0",
+    "node-fetch": "^2.6.0"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js",
+    "publish:prod": "wrangler publish --env prod"
+  },
+  "name": "tg-antibv-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot that fixes the URL obfuscation of a famous video sharing website.",
+  "main": "index.js",
+  "repository": "https://github.com/outloudvi/tg-antibv-bot",
+  "author": "Outvi V <oss@outv.im>",
+  "license": "MIT",
+  "private": true
+}
