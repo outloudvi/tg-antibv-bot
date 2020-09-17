@@ -1,4 +1,7 @@
 const fetch = require('node-fetch')
+const { BadUrlError } = require('./errors')
+
+const validHosts = ['b23.tv']
 
 // Return AV with BV-prefixed BV.
 // https://www.zhihu.com/question/381784377/answer/1099438784
@@ -12,56 +15,52 @@ function bv2av(bv) {
 
   let r = 0
   for (let i = 0; i < pos.length; i++) r += table[bv[pos[i]]] * 58 ** i
-  return (r - 8728348608) ^ 177451812
+  return String((r - 8728348608) ^ 177451812)
 }
 
-// Return BV without BV prefix.
-function findBVFromText(text) {
-  const match = text.match(/BV([1-9A-HJ-NP-Za-km-z]+)/)
-  if (match === null) return ''
-  return match[0].replace(/^BV/, '')
+// Return BV/cv with BV/cv prefix.
+async function findUrlFromB23(b23url) {
+  if (!b23url.startsWith('https://') && !b23url.startsWith('http://')) {
+    b23url = 'https://' + b23url
+  }
+  const target = new URL(b23url)
+  if (!validHosts.includes(target.hostname)) {
+    throw new BadUrlError(target.hostname)
+  }
+  const url = await fetch(b23url, {
+    method: 'HEAD',
+  })
+    .then((x) => x.url)
+    .then((x) => {
+      const u = new URL(x)
+      u.search = ''
+      return u.toString()
+    })
+  return url
 }
 
-function findB23Url(text) {
+async function findB23UrlFromText(text) {
   const match = text.match(/b23.tv\/[A-Za-z0-9]+/)
-  if (match === null) return ''
+  if (match === null) throw BadUrlError(text)
   return 'https://' + match[0]
 }
 
-// Return BV without BV prefix.
-async function findBVFromB23Url(text) {
-  const b23Url = findB23Url(text)
-  const url = await fetch(b23Url, {
-    method: 'HEAD',
-  }).then((x) => x.url)
-  return findBVFromText(url)
+async function findBVFromText(text) {
+  const match = text.match(/BV([1-9A-HJ-NP-Za-km-z]+)/i)
+  if (match === null) throw 'BV# not found'
+  return [match[0], 'bv']
 }
 
-// Return AV.
+async function findCVFromText(text) {
+  const match = text.match(/cv([0-9]+)/i)
+  if (match === null) throw 'cv# not found'
+  return [match[0], 'cv']
+}
+
 async function findAVFromText(text) {
-  let bv = findBVFromText(text)
-  // console.info('Found BV:', bv)
-  if (bv) {
-    return bv2av('BV' + bv)
-  }
-  let b23link = await findBVFromB23Url(text)
-  // console.info('Found BV from url:', b23link)
-  if (b23link) {
-    return bv2av('BV' + b23link)
-  }
-  return ''
-}
-
-async function findAVFromTextWithSrc(text) {
-  let bv = findBVFromText(text)
-  if (bv) {
-    return [bv2av('BV' + bv), 'BV' + bv]
-  }
-  let b23link = await findBVFromB23Url(text)
-  if (b23link) {
-    return [bv2av('BV' + b23link), findB23Url(text)]
-  }
-  return ''
+  const match = text.match(/av([0-9]+)/i)
+  if (match === null) throw 'av# not found'
+  return [match[0], 'av']
 }
 
 function rand() {
@@ -112,11 +111,12 @@ async function tellSlack(obj) {
 }
 
 module.exports = {
-  findAVFromText,
-  findBVFromB23Url,
-  findBVFromText,
-  findAVFromTextWithSrc,
   bv2av,
+  findB23UrlFromText,
+  findBVFromText,
+  findAVFromText,
+  findCVFromText,
+  findUrlFromB23,
   rand,
   sendMessage,
   answerInlineQuery,

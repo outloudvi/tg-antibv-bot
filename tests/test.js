@@ -1,45 +1,53 @@
 const lib = require('../lib')
 const { describe } = require('mocha')
 const { expect } = require('chai')
+const { BadUrlError } = require('../errors')
 
 describe('Library test suite', function () {
-  it('Can find BV', function () {
-    expect(lib.findBVFromText('BV1Nt4y1D7pW')).to.eq('1Nt4y1D7pW')
-    expect(lib.findBVFromText('b23.tv/BV1Nt4y1D7pW')).to.eq('1Nt4y1D7pW')
-    expect(lib.findBVFromText('https://b23.tv/BV1Nt4y1D7pW')).to.eq(
-      '1Nt4y1D7pW'
-    )
-    expect(lib.findBVFromText('https://bilibili.com/video/BV1Nt4y1D7pW')).to.eq(
-      '1Nt4y1D7pW'
-    )
+  it('bv2av', function () {
+    expect(lib.bv2av('BV1Nt4y1D7pW')).to.eq('626524324')
+  })
+  it('findB23UrlFromText', async function () {
     expect(
-      lib.findBVFromText(
-        'https://bilibili.com/video/BV1Nt4y1D7pW?tracking=flag'
-      )
-    ).to.eq('1Nt4y1D7pW')
+      await lib.findB23UrlFromText('/convert b23.tv/eFXEF1?tracking=1')
+    ).to.deep.eq(['https://b23.tv/eFXEF1', 'b23'])
   })
-
-  it('Can find AV from BV', function () {
-    expect(lib.bv2av('BV1Nt4y1D7pW')).to.eq(626524324)
-  })
-
-  it('Can find AV from BV', function () {
-    expect(lib.bv2av('BV1Nt4y1D7pW')).to.eq(626524324)
-  })
-
-  it('Can find BV from b23', async function () {
-    expect(await lib.findBVFromB23Url('https://b23.tv/eFXEF1')).to.eq(
-      '1CA411e7eA'
-    )
-  })
-
-  it('Can use findAVFromText universally', async function () {
-    expect(await lib.findAVFromText('BV1Nt4y1D7pW')).to.eq(626524324)
+  it('findBVFromText', async function () {
     expect(
-      await lib.findAVFromText(
-        'https://bilibili.com/video/BV1Nt4y1D7pW?tracking=flag'
+      await lib.findBVFromText('/convert https://b23.tv/BV1Nt4y1D7pW?t=1')
+    ).to.deep.eq(['BV1Nt4y1D7pW', 'bv'])
+  })
+  it('findAVFromText', async function () {
+    expect(
+      await lib.findAVFromText('/convert https://b23.tv/av23333333?t=1')
+    ).to.deep.eq(['av23333333', 'av'])
+  })
+  it('findCVFromText', async function () {
+    expect(
+      await lib.findCVFromText(
+        '/convert https://bilibili.com/read/cv2333333?t=1'
       )
-    ).to.eq(626524324)
-    expect(await lib.findAVFromText('https://b23.tv/eFXEF1')).to.eq(328843878)
+    ).to.deep.eq(['cv2333333', 'cv'])
+  })
+  it('findUrlFromB23 filtered case', async function () {
+    // Chai seems to be not supporting async error catching
+    {
+      let yes = 0
+      await lib.findUrlFromB23('https://baidu.com').catch((e) => {
+        if (e instanceof BadUrlError) {
+          yes = 1
+        }
+      })
+      expect(yes).to.eq(1)
+    }
+  })
+  it('findUrlFromB23', async function () {
+    expect(await lib.findUrlFromB23('https://b23.tv/eFXEF1')).to.eq(
+      'https://www.bilibili.com/video/BV1CA411e7eA'
+    )
+
+    expect(await lib.findUrlFromB23('https://b23.tv/osjFE5')).to.eq(
+      'https://www.bilibili.com/read/cv7603961'
+    )
   })
 })

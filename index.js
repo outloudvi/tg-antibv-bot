@@ -1,25 +1,70 @@
 const {
-  findAVFromTextWithSrc,
   rand,
   sendMessage,
   answerInlineQuery,
   tellSlack,
+  findUrlFromB23,
+  findAVFromText,
+  findBVFromText,
+  findCVFromText,
+  findB23UrlFromText,
+  bv2av,
 } = require('./lib')
-// const fetch = require('node-fetch')
+
+const promiseAny = require('promise.any')
+const { BadUrlError } = require('./errors')
 
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
 })
 
 async function getResp(text) {
-  let earlyReturn = false
-  const result = await findAVFromTextWithSrc(text).catch((e) => {
-    earlyReturn = 'Error on extracting av number: ' + String(e)
+  let transformedOverB23 = false
+  let b23URL = ''
+  try {
+    if (text.includes('b23.tv')) {
+      b23URL = await findB23UrlFromText(text)
+      text = await findUrlFromB23(b23URL)
+      transformedOverB23 = true
+    }
+  } catch (e) {
+    if (e instanceof BadUrlError) return 'Not a valid b23.tv URL.'
+    return 'Unexpected error: ' + e.toString()
+  }
+  const result = await promiseAny([
+    findAVFromText(text),
+    findBVFromText(text),
+    findCVFromText(text),
+  ]).catch((x) => {
+    if (transformedOverB23) {
+      return [text, 'any']
+    }
+    return 'No valid av/BV/cv link found.'
   })
-  if (earlyReturn) return earlyReturn
-  return result.length > 0
-    ? `${result[1]} = b23.tv/av${result[0]}`
-    : `We don't find valid Bilibili links in ${text}.`
+  const src = result[0]
+  let dst = ''
+  if (!Array.isArray(result)) {
+    return result
+  }
+  switch (result[1]) {
+    case 'av': {
+      dst = `https://b23.tv/${src}`
+      break
+    }
+    case 'bv': {
+      dst = `https://b23.tv/av${bv2av(src)}`
+      break
+    }
+    case 'cv': {
+      dst = `https://www.bilibili.com/read/${src}/`
+      break
+    }
+    default: {
+      return `${text} = ${b23URL}`
+    }
+  }
+
+  return `${dst} = ${src}`
 }
 
 async function handleMessage(message, change_reply_to = -1) {
@@ -73,8 +118,7 @@ async function handler(request) {
   })
   if (body.message) {
     return await handleMessage(body.message)
-  }
-  if (body.inline_query) {
+  } else if (body.inline_query) {
     return await handleInline(body.inline_query)
   }
   return {}
@@ -96,7 +140,10 @@ async function handleRequest(request) {
   try {
     ret = await handler(request)
   } catch (e) {
-    await tellSlack(e)
+    await tellSlack({
+      error: e.toString(),
+      stack: e.stack,
+    })
   }
   return new Response('OK', { status: 200 })
 }
