@@ -41,7 +41,7 @@ async function findUrlFromB23(b23url) {
 
 async function findB23UrlFromText(text) {
   const match = text.match(/b23.tv\/[A-Za-z0-9]+/)
-  if (match === null) throw BadUrlError(text)
+  if (match === null) throw new BadUrlError(text)
   return 'https://' + match[0]
 }
 
