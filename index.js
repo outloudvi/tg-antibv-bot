@@ -35,7 +35,7 @@ async function getResp(text) {
     findAVFromText(text),
     findBVFromText(text),
     findCVFromText(text),
-  ]).catch((x) => {
+  ]).catch(() => {
     if (transformedOverB23) {
       return [text, 'any']
     }
@@ -113,7 +113,7 @@ async function handleInline(inlineQuery) {
 
 async function handler(request) {
   if (request.method != 'POST') return
-  const body = await request.json().catch((x) => {
+  const body = await request.json().catch(() => {
     return {}
   })
   if (body.message) {
@@ -136,9 +136,8 @@ async function handleRequest(request) {
     )
     return resp.clone()
   }
-  let ret
   try {
-    ret = await handler(request)
+    await handler(request)
   } catch (e) {
     await tellSlack({
       error: e.toString(),
