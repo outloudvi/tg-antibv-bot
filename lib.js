@@ -77,6 +77,7 @@ async function sendMessage(chat_id, text, reply_to_message_id = undefined) {
       chat_id,
       text,
       reply_to_message_id,
+      parse_mode: 'Markdown',
     }),
   })
 }

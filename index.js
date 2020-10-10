@@ -58,7 +58,9 @@ async function getResp(text) {
     }
   }
 
-  return `${dst} = ${transformedOverB23 ? b23URL : src}`
+  return `${dst} = ${
+    transformedOverB23 ? `\`${b23URL.trimStart('https://')}\`` : src
+  }`
 }
 
 async function handleMessage(message, change_reply_to = -1) {
