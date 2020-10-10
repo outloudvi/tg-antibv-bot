@@ -36,9 +36,6 @@ async function getResp(text) {
     findBVFromText(text),
     findCVFromText(text),
   ]).catch(() => {
-    if (transformedOverB23) {
-      return [text, 'any']
-    }
     return 'No valid av/BV/cv link found.'
   })
   const src = result[0]
@@ -59,12 +56,9 @@ async function getResp(text) {
       dst = `https://www.bilibili.com/read/${src}/`
       break
     }
-    default: {
-      return `${text} = ${b23URL}`
-    }
   }
 
-  return `${dst} = ${src}`
+  return `${dst} = ${transformedOverB23 ? b23URL : src}`
 }
 
 async function handleMessage(message, change_reply_to = -1) {
