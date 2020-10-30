@@ -49,5 +49,9 @@ describe('Library test suite', function () {
     expect(await lib.findUrlFromB23('https://b23.tv/osjFE5')).to.eq(
       'https://www.bilibili.com/read/cv7603961'
     )
+    
+    expect(await lib.findUrlFromB23('https://b23.tv/D2bNRAZ')).to.eq(
+      'https://t.bilibili.com/451981038016804202'
+    )
   })
 })
