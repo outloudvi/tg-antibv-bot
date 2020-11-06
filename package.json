@@ -1,12 +1,12 @@
 {
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^7.9.0",
-    "mocha": "^8.1.0",
-    "node-fetch": "^2.6.0"
+    "eslint": "^7.12.1",
+    "mocha": "^8.2.1",
+    "node-fetch": "^2.6.1"
   },
   "scripts": {
-    "test": "mocha tests/**/*.js",
+    "test": "mocha tests/**/*.js --timeout 5000",
     "publish:prod": "wrangler publish --env prod"
   },
   "name": "tg-antibv-bot",
