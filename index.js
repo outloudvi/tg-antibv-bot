@@ -3,65 +3,13 @@ const {
   sendMessage,
   answerInlineQuery,
   tellSlack,
-  findUrlFromB23,
-  findAVFromText,
-  findBVFromText,
-  findCVFromText,
-  findB23UrlFromText,
-  bv2av,
+  getResp,
 } = require('./lib')
-
-const promiseAny = require('promise.any')
-const { BadUrlError } = require('./errors')
+const fetch = require('node-fetch')
 
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
 })
-
-async function getResp(text) {
-  let transformedOverB23 = false
-  let b23URL = ''
-  try {
-    if (text.includes('b23.tv')) {
-      b23URL = await findB23UrlFromText(text)
-      text = await findUrlFromB23(b23URL)
-      transformedOverB23 = true
-    }
-  } catch (e) {
-    if (e instanceof BadUrlError) return 'Not a valid b23.tv URL.'
-    return 'Unexpected error: ' + e.toString()
-  }
-  const result = await promiseAny([
-    findAVFromText(text),
-    findBVFromText(text),
-    findCVFromText(text),
-  ]).catch(() => {
-    return 'No valid av/BV/cv link found.'
-  })
-  const src = result[0]
-  let dst = ''
-  if (!Array.isArray(result)) {
-    return result
-  }
-  switch (result[1]) {
-    case 'av': {
-      dst = `https://b23.tv/${src}`
-      break
-    }
-    case 'bv': {
-      dst = `https://b23.tv/av${bv2av(src)}`
-      break
-    }
-    case 'cv': {
-      dst = `https://www.bilibili.com/read/${src}/`
-      break
-    }
-  }
-
-  return `${dst} = ${
-    transformedOverB23 ? `\`${b23URL.trimStart('https://')}\`` : src
-  }`
-}
 
 async function handleMessage(message, change_reply_to = -1) {
   // Ignore /start in PM

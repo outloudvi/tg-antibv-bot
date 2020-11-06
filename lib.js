@@ -1,4 +1,5 @@
 const fetch = require('node-fetch')
+const promiseAny = require('promise.any')
 const { BadUrlError } = require('./errors')
 
 const validHosts = ['b23.tv']
@@ -111,6 +112,58 @@ async function tellSlack(obj) {
   })
 }
 
+async function getResp(text) {
+  let transformedOverB23 = false
+  let b23URL = ''
+  try {
+    if (text.includes('b23.tv')) {
+      b23URL = await findB23UrlFromText(text)
+      text = await findUrlFromB23(b23URL)
+      transformedOverB23 = true
+    }
+  } catch (e) {
+    if (e instanceof BadUrlError) return 'Not a valid b23.tv URL.'
+    return 'Unexpected error: ' + e.toString()
+  }
+  const result = await promiseAny([
+    findAVFromText(text),
+    findBVFromText(text),
+    findCVFromText(text),
+  ]).catch(() => {
+    if (transformedOverB23) {
+      // well, b23 can give anything...
+      return [text, 'others']
+    }
+    return 'No valid av/BV/cv link found.'
+  })
+  const src = result[0]
+  let dst = ''
+  if (!Array.isArray(result)) {
+    return result
+  }
+  switch (result[1]) {
+    case 'av': {
+      dst = `https://b23.tv/${src}`
+      break
+    }
+    case 'bv': {
+      dst = `https://b23.tv/av${bv2av(src)}`
+      break
+    }
+    case 'cv': {
+      dst = `https://www.bilibili.com/read/${src}/`
+      break
+    }
+    default: {
+      dst = result[0]
+    }
+  }
+
+  return `${dst} = ${
+    transformedOverB23 ? `\`${b23URL.trimStart('https://')}\`` : src
+  }`
+}
+
 module.exports = {
   bv2av,
   findB23UrlFromText,
@@ -122,4 +175,5 @@ module.exports = {
   sendMessage,
   answerInlineQuery,
   tellSlack,
+  getResp,
 }
