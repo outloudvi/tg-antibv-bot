@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
-const promiseAny = require('promise.any')
 const { BadUrlError } = require('./errors')
+const { promiseOrder } = require('./utils')
 
 const validHosts = ['b23.tv']
 
@@ -125,10 +125,10 @@ async function getResp(text) {
     if (e instanceof BadUrlError) return 'Not a valid b23.tv URL.'
     return 'Unexpected error: ' + e.toString()
   }
-  const result = await promiseAny([
-    findAVFromText(text),
+  const result = await promiseOrder([
     findBVFromText(text),
     findCVFromText(text),
+    findAVFromText(text),
   ]).catch(() => {
     if (transformedOverB23) {
       // well, b23 can give anything...

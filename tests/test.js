@@ -68,4 +68,11 @@ describe('Library test suite', function () {
       'https://bml.bilibili.com/2020/index.html#/vr = `https://b23.tv/7fZElg`'
     )
   })
+
+  it('special tests', async function () {
+    // issue #1
+    expect(
+      await lib.getResp('https://www.bilibili.com/video/BV1aV411z7gR')
+    ).to.eq('https://b23.tv/av414110286 = BV1aV411z7gR')
+  })
 })

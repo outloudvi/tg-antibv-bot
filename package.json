@@ -16,8 +16,5 @@
   "repository": "https://github.com/outloudvi/tg-antibv-bot",
   "author": "Outvi V <oss@outv.im>",
   "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "promise.any": "^2.0.1"
-  }
+  "private": true
 }
