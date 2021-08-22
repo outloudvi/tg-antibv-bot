@@ -2,7 +2,7 @@
 
 import fetch from 'node-fetch'
 import { BadUrlError } from './errors'
-import { promiseOrder, checkFirstNonNull } from './utils'
+import { promiseOrder, checkFirstNonNull, bv2av } from './utils'
 
 const AV_ID_RGX = /av([0-9]+)/
 const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
@@ -17,21 +17,6 @@ const REGEXES: [string, RegExp][] = [
 ]
 
 const validHosts = ['b23.tv', 'b23.wtf']
-
-// Return AV with BV-prefixed BV.
-// https://www.zhihu.com/question/381784377/answer/1099438784
-function bv2av(bv) {
-  if (!bv) return
-
-  const pos = [11, 10, 3, 8, 4, 6]
-  const base = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'
-  const table = {}
-  for (let i = 0; i < base.length; i++) table[base[i]] = i
-
-  let r = 0
-  for (let i = 0; i < pos.length; i++) r += table[bv[pos[i]]] * 58 ** i
-  return String((r - 8728348608) ^ 177451812)
-}
 
 // Return BV/cv with BV/cv prefix.
 async function findUrlFromB23(b23url) {
@@ -199,7 +184,6 @@ export async function getResp(text) {
 }
 
 export default {
-  bv2av,
   findB23UrlFromText,
   findBVFromText,
   findAVFromText,

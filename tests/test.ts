@@ -1,11 +1,12 @@
 import lib from '../src/lib'
+import { bv2av } from '../src/utils'
 import { describe } from 'mocha'
 import { expect } from 'chai'
 import { BadUrlError } from '../src/errors'
 
 describe('Library test suite', function () {
   it('bv2av', function () {
-    expect(lib.bv2av('BV1Nt4y1D7pW')).to.eq('626524324')
+    expect(bv2av('BV1Nt4y1D7pW')).to.eq('626524324')
   })
   it('findB23UrlFromText', async function () {
     expect(
