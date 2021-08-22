@@ -4,7 +4,7 @@ import {
   sendMessage,
   tellSlack,
 } from './commutils'
-import { getResp } from './lib'
+import { getAllResolvableLinks, getResp } from './lib'
 import { rand } from './utils'
 
 import fetch from 'node-fetch'
@@ -32,12 +32,29 @@ async function handleMessage(message, change_reply_to = -1) {
   let text = message.text || ''
   text = text.replace(/^\/convert(@antibvbot)? /i, '')
   if (text === '') return
-  const resptext = await getResp(text.trim())
-  await sendMessage(
-    message.chat.id,
-    resptext,
-    change_reply_to === -1 ? message.message_id : change_reply_to
-  )
+  const linkNumber = getAllResolvableLinks(text).length
+  const respPromise = getResp(text)
+  let currWaitingMessage
+  if (linkNumber > 2) {
+    currWaitingMessage = await sendMessage(
+      message.chat.id,
+      `Resolving ${linkNumber} links...\n` +
+        "Reduce the link count if you don't get the response.",
+      change_reply_to === -1 ? message.message_id : change_reply_to
+    )
+      .then((x) => x.json())
+      .then((x) => x.result.message_id)
+  }
+  const respText = await respPromise
+  if (currWaitingMessage) {
+    await editMessage(message.chat.id, currWaitingMessage, respText)
+  } else {
+    await sendMessage(
+      message.chat.id,
+      respText,
+      change_reply_to === -1 ? message.message_id : change_reply_to
+    )
+  }
 }
 
 async function handleInline(inlineQuery) {
