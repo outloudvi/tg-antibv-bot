@@ -12,6 +12,11 @@ describe('Library test suite', function () {
       await lib.findB23UrlFromText('/convert b23.tv/eFXEF1?tracking=1')
     ).to.deep.eq('https://b23.tv/eFXEF1')
   })
+  it('findB23WtfUrlFromText', async function () {
+    expect(
+      await lib.findB23UrlFromText('/convert b23.wtf/eFXEF1?tracking=1')
+    ).to.deep.eq('https://b23.wtf/eFXEF1')
+  })
   it('findBVFromText', async function () {
     expect(
       await lib.findBVFromText('/convert https://b23.tv/BV1Nt4y1D7pW?t=1')

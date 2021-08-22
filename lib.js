@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 const { BadUrlError } = require('./errors')
 const { promiseOrder } = require('./utils')
 
-const validHosts = ['b23.tv']
+const validHosts = ['b23.tv', 'b23.wtf']
 
 // Return AV with BV-prefixed BV.
 // https://www.zhihu.com/question/381784377/answer/1099438784
@@ -41,7 +41,7 @@ async function findUrlFromB23(b23url) {
 }
 
 async function findB23UrlFromText(text) {
-  const match = text.match(/b23.tv\/[A-Za-z0-9]+/)
+  const match = text.match(/b23.(tv|wtf)\/[A-Za-z0-9]+/)
   if (match === null) throw new BadUrlError(text)
   return 'https://' + match[0]
 }
@@ -116,7 +116,10 @@ async function getResp(text) {
   let transformedOverB23 = false
   let b23URL = ''
   try {
-    if (text.includes('b23.tv')) {
+    if (
+      validHosts.map((r) => text.includes(r)).filter((x) => x === true).length >
+      0
+    ) {
       b23URL = await findB23UrlFromText(text)
       text = await findUrlFromB23(b23URL)
       transformedOverB23 = true
