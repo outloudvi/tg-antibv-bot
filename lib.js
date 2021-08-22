@@ -1,6 +1,18 @@
 const fetch = require('node-fetch')
 const { BadUrlError } = require('./errors')
-const { promiseOrder } = require('./utils')
+const { promiseOrder, checkFirstNonNull } = require('./utils')
+
+const AV_ID_RGX = /av([0-9]+)/
+const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
+const CV_ID_RGX = /cv([0-9]+)/
+const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
+
+const REGEXES = [
+  ['b23', B23_URL_RGX],
+  ['av', AV_ID_RGX],
+  ['bv', BV_ID_RGX],
+  ['cv', CV_ID_RGX],
+]
 
 const validHosts = ['b23.tv', 'b23.wtf']
 
@@ -41,25 +53,25 @@ async function findUrlFromB23(b23url) {
 }
 
 async function findB23UrlFromText(text) {
-  const match = text.match(/b23.(tv|wtf)\/[A-Za-z0-9]+/)
+  const match = text.match(B23_URL_RGX)
   if (match === null) throw new BadUrlError(text)
   return 'https://' + match[0]
 }
 
 async function findBVFromText(text) {
-  const match = text.match(/BV([1-9A-HJ-NP-Za-km-z]+)/i)
+  const match = text.match(BV_ID_RGX)
   if (match === null) throw 'BV# not found'
   return [match[0], 'bv']
 }
 
 async function findCVFromText(text) {
-  const match = text.match(/cv([0-9]+)/i)
+  const match = text.match(CV_ID_RGX)
   if (match === null) throw 'cv# not found'
   return [match[0], 'cv']
 }
 
 async function findAVFromText(text) {
-  const match = text.match(/av([0-9]+)/i)
+  const match = text.match(AV_ID_RGX)
   if (match === null) throw 'av# not found'
   return [match[0], 'av']
 }
@@ -110,6 +122,19 @@ async function tellSlack(obj) {
       text: typeof obj === 'object' ? JSON.stringify(obj) : String(obj),
     }),
   })
+}
+
+function getAllResolvableLinks(text) {
+  let start = 0
+  const ret = []
+  while (start < text.length) {
+    const curr = text.slice(start)
+    const match = checkFirstNonNull(curr, REGEXES)
+    if (match === null) break
+    ret.push([match[0], match[1][1]])
+    start += match[1].index + match[1][0].length
+  }
+  return ret
 }
 
 async function getResp(text) {
@@ -179,4 +204,5 @@ module.exports = {
   answerInlineQuery,
   tellSlack,
   getResp,
+  getAllResolvableLinks,
 }
