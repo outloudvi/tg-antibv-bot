@@ -63,23 +63,23 @@ describe('Library test suite', function () {
 
   it('getResp', async function () {
     expect(await lib.getResp('https://b23.tv/eFXEF1')).to.eq(
-      'https://b23.tv/av328843878 = `https://b23.tv/eFXEF1`'
+      'https://b23.tv/av328843878 = `b23.tv/eFXEF1`'
     )
 
     expect(await lib.getResp('http://b23.tv/osjFE5')).to.eq(
-      'https://www.bilibili.com/read/cv7603961/ = `https://b23.tv/osjFE5`'
+      'https://www.bilibili.com/read/cv7603961/ = `b23.tv/osjFE5`'
     )
 
     expect(await lib.getResp('b23.tv/7fZElg')).to.eq(
-      'https://bml.bilibili.com/2020/index.html#/vr = `https://b23.tv/7fZElg`'
+      'https://bml.bilibili.com/2020/index.html#/vr = `b23.tv/7fZElg`'
     )
   })
 
   it('getResp (multiple)', async function () {
     expect(await lib.getResp('https://b23.tv/eFXEF1  b23.tv/osjFE5')).to.eq(
-      'https://b23.tv/av328843878 = `https://b23.tv/eFXEF1`' +
+      'https://b23.tv/av328843878 = `b23.tv/eFXEF1`' +
         '\n' +
-        'https://www.bilibili.com/read/cv7603961/ = `https://b23.tv/osjFE5`'
+        'https://www.bilibili.com/read/cv7603961/ = `b23.tv/osjFE5`'
     )
   })
 
