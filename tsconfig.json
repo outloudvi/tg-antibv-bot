@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "esModuleInterop": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "src/*": ["src/*"],
+      "~*": ["src/bot/*"]
+    },
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "lib": ["es2019", "webworker"],
+    "resolveJsonModule": true,
+    "types": ["@cloudflare/workers-types", "mocha"],
+    "typeRoots": ["node_modules/@types", "index.d.ts"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "./node_modules/@cloudflare/workers-types/index.d.ts"
+  ],
+  "exclude": ["node_modules/", "dist/"]
+}

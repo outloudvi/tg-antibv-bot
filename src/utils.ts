@@ -1,4 +1,4 @@
-async function promiseOrder(promises) {
+export async function promiseOrder(promises) {
   let failure
   for (const i of promises) {
     let result
@@ -14,19 +14,17 @@ async function promiseOrder(promises) {
   throw failure
 }
 
-/**
- * @param {string} text
- * @param {[string, RegExp][]} regexes
- * @returns [tag, match] or null
- */
-function checkFirstNonNull(text, regexes) {
-  const rets = []
+type LinkType = [string, RegExpMatchArray]
+
+export function checkFirstNonNull(
+  text: string,
+  regexes: [string, RegExp][]
+): LinkType | null {
+  const rets: LinkType[] = []
   for (const [tag, rgx] of regexes) {
     const match = text.match(rgx)
     if (match !== null) rets.push([tag, match])
   }
   if (rets.length === 0) return null
-  return rets.reduce((a, b) => (a[1].index < b[1].index ? a : b))
+  return rets.reduce((a, b) => ((a[1].index ?? 0) < (b[1].index ?? 0) ? a : b))
 }
-
-module.exports = { promiseOrder, checkFirstNonNull }

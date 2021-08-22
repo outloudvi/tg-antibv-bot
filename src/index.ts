@@ -1,11 +1,5 @@
-const {
-  rand,
-  sendMessage,
-  answerInlineQuery,
-  tellSlack,
-  getResp,
-} = require('./lib')
-const fetch = require('node-fetch')
+import { rand, sendMessage, answerInlineQuery, tellSlack, getResp } from './lib'
+import fetch from 'node-fetch'
 
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))

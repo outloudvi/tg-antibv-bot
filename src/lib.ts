@@ -1,13 +1,15 @@
-const fetch = require('node-fetch')
-const { BadUrlError } = require('./errors')
-const { promiseOrder, checkFirstNonNull } = require('./utils')
+/// <reference types="./global" />
+
+import fetch from 'node-fetch'
+import { BadUrlError } from './errors'
+import { promiseOrder, checkFirstNonNull } from './utils'
 
 const AV_ID_RGX = /av([0-9]+)/
 const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
 const CV_ID_RGX = /cv([0-9]+)/
 const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
 
-const REGEXES = [
+const REGEXES: [string, RegExp][] = [
   ['b23', B23_URL_RGX],
   ['av', AV_ID_RGX],
   ['bv', BV_ID_RGX],
@@ -76,11 +78,15 @@ async function findAVFromText(text) {
   return [match[0], 'av']
 }
 
-function rand() {
+export function rand() {
   return String(Math.random()) + String(Math.random())
 }
 
-async function sendMessage(chat_id, text, reply_to_message_id = undefined) {
+export async function sendMessage(
+  chat_id,
+  text,
+  reply_to_message_id = undefined
+) {
   return await fetch(`https://api.telegram.org/bot${BOT_KEY}/sendMessage`, {
     method: 'POST',
     headers: {
@@ -95,7 +101,7 @@ async function sendMessage(chat_id, text, reply_to_message_id = undefined) {
   })
 }
 
-async function answerInlineQuery(inline_query_id, results) {
+export async function answerInlineQuery(inline_query_id, results) {
   const ret = await fetch(
     `https://api.telegram.org/bot${BOT_KEY}/answerInlineQuery`,
     {
@@ -112,7 +118,7 @@ async function answerInlineQuery(inline_query_id, results) {
   ).then((x) => x.json())
 }
 
-async function tellSlack(obj) {
+export async function tellSlack(obj) {
   await fetch(SLACK_WEBHOOK_URL, {
     method: 'POST',
     headers: {
@@ -124,20 +130,20 @@ async function tellSlack(obj) {
   })
 }
 
-function getAllResolvableLinks(text) {
+export function getAllResolvableLinks(text) {
   let start = 0
-  const ret = []
+  const ret: [string, string][] = []
   while (start < text.length) {
     const curr = text.slice(start)
     const match = checkFirstNonNull(curr, REGEXES)
     if (match === null) break
     ret.push([match[0], match[1][1]])
-    start += match[1].index + match[1][0].length
+    start += (match[1].index ?? 0) + match[1][0].length
   }
   return ret
 }
 
-async function getResp(text) {
+export async function getResp(text) {
   let transformedOverB23 = false
   let b23URL = ''
   try {
@@ -188,11 +194,11 @@ async function getResp(text) {
   }
 
   return `${dst} = ${
-    transformedOverB23 ? `\`${b23URL.trimStart('https://')}\`` : src
+    transformedOverB23 ? `\`${b23URL.replace(/^https:\/\//, '')}\`` : src
   }`
 }
 
-module.exports = {
+export default {
   bv2av,
   findB23UrlFromText,
   findBVFromText,
