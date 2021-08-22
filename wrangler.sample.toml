@@ -2,6 +2,7 @@ account_id = ""
 name = "anti-bv-bot"
 route = ""
 type = "webpack"
+webpack_config = "webpack.config.js"
 workers_dev = true
 zone_id = ""
 
