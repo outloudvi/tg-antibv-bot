@@ -1,4 +1,12 @@
-import { rand, sendMessage, answerInlineQuery, tellSlack, getResp } from './lib'
+import {
+  answerInlineQuery,
+  editMessage,
+  sendMessage,
+  tellSlack,
+} from './commutils'
+import { getResp } from './lib'
+import { rand } from './utils'
+
 import fetch from 'node-fetch'
 
 addEventListener('fetch', (event) => {
@@ -66,7 +74,7 @@ async function handler(request) {
  *
  * @param {Request} request
  */
-async function handleRequest(request) {
+async function handleRequest(request: Request): Promise<Response> {
   let path = new URL(request.url).pathname
   if (path == '/acct') {
     const resp = await fetch(
