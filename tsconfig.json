@@ -8,11 +8,6 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"],
-      "src/*": ["src/*"],
-      "~*": ["src/bot/*"]
-    },
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
