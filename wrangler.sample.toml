@@ -1,11 +1,11 @@
-name = "anti-bv-bot"
-type = "webpack"
 account_id = ""
-workers_dev = true
+name = "anti-bv-bot"
 route = ""
+type = "webpack"
+workers_dev = true
 zone_id = ""
 
 [env.prod.vars]
-BOT_KEY = "BOT_KEY"
 BASEURL = "https://anti-bv-bot-prod.example.workers.dev/"
+BOT_KEY = "BOT_KEY"
 SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/wh/at/ever"
