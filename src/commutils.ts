@@ -34,6 +34,7 @@ export async function editMessage(chat_id, message_id, text) {
       message_id,
       text,
       parse_mode: 'Markdown',
+      disable_web_page_preview: true,
     }),
   })
 }
