@@ -1,7 +1,5 @@
 /// <reference types="./global" />
 
-import fetch from 'node-fetch'
-
 // Telegram
 
 export async function sendMessage(

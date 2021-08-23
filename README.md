@@ -17,8 +17,6 @@
 - Inline bot（行内模式），不需加 `/convert` 指令。
 - 群组内聊天，需要加 `/convert` 指令。
 
-请注意在 `wrangler publish` 之前把对 `node-fetch` 的引用删除。
-
 ## FAQ
 
 ### 关于某视频网站为什么使用 BV 号来替代 av 号

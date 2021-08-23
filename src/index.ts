@@ -7,8 +7,6 @@ import {
 import { getAllResolvableLinks, getResp } from './lib'
 import { rand } from './utils'
 
-import fetch from 'node-fetch'
-
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
 })

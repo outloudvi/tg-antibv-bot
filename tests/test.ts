@@ -1,3 +1,8 @@
+/// <reference types="@types/node" />
+
+import fetch from 'node-fetch'
+globalThis.fetch = fetch
+
 import { getResp } from '../src/lib'
 import { bv2av, getHeadRedirect } from '../src/utils'
 import { describe } from 'mocha'

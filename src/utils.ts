@@ -1,8 +1,6 @@
 import { BadUrlError } from './errors'
 import type { LinkType, TypedLinkSelector } from './types'
 
-import fetch from 'node-fetch'
-
 export function checkFirstNonNull(
   text: string,
   regexes: [LinkType, RegExp][]
