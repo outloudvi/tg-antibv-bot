@@ -37,7 +37,7 @@ async function handleMessage(message, change_reply_to = -1) {
     currWaitingMessage = await sendMessage(
       message.chat.id,
       `Resolving ${linkNumber} links...\n` +
-        "Reduce the link count if you don't get the response.",
+        "Reduce the link number if you don't get the response.",
       change_reply_to === -1 ? message.message_id : change_reply_to
     )
       .then((x) => x.json())
