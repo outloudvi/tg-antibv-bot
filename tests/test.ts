@@ -59,4 +59,10 @@ describe('Library test suite', function () {
       'https://b23.tv/av414110286 = `BV1aV411z7gR`'
     )
   })
+
+  it('IAP link', async function () {
+    expect(await getResp('https://b23.tv/mXtAjY')).to.eq(
+      'https://b23.tv/av846101025 = `b23.tv/mXtAjY`'
+    )
+  })
 })

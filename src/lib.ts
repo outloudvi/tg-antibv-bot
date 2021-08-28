@@ -1,53 +1,12 @@
-import { LinkType, TypedLink } from './types'
-import { checkFirstNonNull, bv2av, getHeadRedirect } from './utils'
-
-const AV_ID_RGX = /av([0-9]+)/
-const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
-const CV_ID_RGX = /cv([0-9]+)/
-const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
-
-const REGEXES: [LinkType, RegExp][] = [
-  [LinkType.b23, B23_URL_RGX],
-  [LinkType.av, AV_ID_RGX],
-  [LinkType.bv, BV_ID_RGX],
-  [LinkType.cv, CV_ID_RGX],
-]
+import { LinkType } from './types'
+import {
+  bv2av,
+  getHeadRedirect,
+  getAllResolvableLinks,
+  typedLinkToString,
+} from './utils'
 
 const VALID_HOSTS = ['b23.tv', 'b23.wtf']
-
-export function typedLinkToString(link: TypedLink, finalized: boolean): string {
-  const payload = link.payload
-  switch (link.type) {
-    case LinkType.b23:
-      return `b23.tv/${payload}`
-    case LinkType.av:
-      // Only av can be finalized
-      return (finalized ? `https://b23.tv/` : '') + `av${payload}`
-    case LinkType.bv:
-      return `BV${payload}`
-    case LinkType.cv:
-      return (
-        (finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}`
-      )
-  }
-}
-
-export function getAllResolvableLinks(text: string): TypedLink[] {
-  let start = 0
-  const ret: TypedLink[] = []
-  while (start < text.length) {
-    const curr = text.slice(start)
-    const match = checkFirstNonNull(curr, REGEXES)
-    if (match === null) break
-    ret.push({
-      type: match[0],
-      source: match[1][0],
-      payload: match[1][1],
-    })
-    start += (match[1].index ?? 0) + match[1][0].length
-  }
-  return ret
-}
 
 export async function getResp(text: string): Promise<string> {
   const links = getAllResolvableLinks(text)

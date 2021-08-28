@@ -1,5 +1,7 @@
 import { BadUrlError } from './errors'
-import type { LinkType, TypedLinkSelector } from './types'
+import { LinkType } from './types'
+import type { TypedLink, TypedLinkSelector } from './types'
+import { REGEXES } from './const'
 
 export function checkFirstNonNull(
   text: string,
@@ -27,6 +29,64 @@ export function bv2av(bv: string): string {
   return String((r - 8728348608) ^ 177451812)
 }
 
+function tryToURL(s: any): URL | null {
+  try {
+    return new URL(s)
+  } catch (_) {
+    return null
+  }
+}
+
+export function typedLinkToString(link: TypedLink, finalized: boolean): string {
+  const payload = link.payload
+  switch (link.type) {
+    case LinkType.b23:
+      return `b23.tv/${payload}`
+    case LinkType.av:
+      // Only av can be finalized
+      return (finalized ? `https://b23.tv/` : '') + `av${payload}`
+    case LinkType.bv:
+      return `BV${payload}`
+    case LinkType.cv:
+      return (
+        (finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}`
+      )
+  }
+}
+
+export function getAllResolvableLinks(text: string): TypedLink[] {
+  let start = 0
+  const ret: TypedLink[] = []
+  while (start < text.length) {
+    const curr = text.slice(start)
+    const match = checkFirstNonNull(curr, REGEXES)
+    if (match === null) break
+    ret.push({
+      type: match[0],
+      source: match[1][0],
+      payload: match[1][1],
+    })
+    start += (match[1].index ?? 0) + match[1][0].length
+  }
+  return ret
+}
+
+function iapLinkToVideo(iapLink: URL): string {
+  const schemaedLink = tryToURL(iapLink.searchParams.get('schema'))
+  if (schemaedLink !== null && schemaedLink.hostname === 'video') {
+    // Analyze the schemed link if possible
+    return typedLinkToString(
+      {
+        type: LinkType.av, // Must be bv
+        payload: schemaedLink.pathname.replace(/\//, ''),
+      },
+      true
+    )
+  }
+  const preUrl = iapLink.searchParams.get('preUrl') as string
+  return typedLinkToString(getAllResolvableLinks(preUrl)[0], true)
+}
+
 export async function getHeadRedirect(
   url: string,
   validHosts: string[] = []
@@ -44,6 +104,9 @@ export async function getHeadRedirect(
     .then((x) => x.url)
     .then((x) => {
       const u = new URL(x)
+      if (u.hostname === 'd.bilibili.com') {
+        return iapLinkToVideo(u)
+      }
       u.search = ''
       return u.toString()
     })

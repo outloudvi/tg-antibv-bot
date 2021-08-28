@@ -4,8 +4,8 @@ import {
   sendMessage,
   tellSlack,
 } from './commutils'
-import { getAllResolvableLinks, getResp } from './lib'
-import { rand } from './utils'
+import { getResp } from './lib'
+import { getAllResolvableLinks, rand } from './utils'
 
 addEventListener('fetch', (event) => {
   event.respondWith(handleRequest(event.request))
