@@ -58,6 +58,7 @@ async function handleMessage(message, change_reply_to = -1) {
 async function handleInline(inlineQuery) {
   // await tellSlack(inlineQuery)
   const resptext = await getResp(inlineQuery.query.trim())
+  const nonVerbosed = resptext.split('=')[0].trim()
   const ret = [
     {
       type: 'article',
@@ -68,7 +69,17 @@ async function handleInline(inlineQuery) {
         parse_mode: 'Markdown',
       },
     },
+    {
+      type: 'article',
+      id: rand(),
+      title: nonVerbosed,
+      input_message_content: {
+        message_text: nonVerbosed,
+        parse_mode: 'Markdown',
+      },
+    },
   ]
+
   return await answerInlineQuery(inlineQuery.id, ret)
 }
 
