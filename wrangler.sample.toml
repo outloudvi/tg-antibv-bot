@@ -1,4 +1,5 @@
 account_id = ""
+compatibility_date = "2021-10-21"
 name = "anti-bv-bot"
 route = ""
 type = "webpack"
