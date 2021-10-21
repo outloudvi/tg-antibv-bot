@@ -58,6 +58,9 @@ describe('Library test suite', function () {
     expect(await getResp('https://www.bilibili.com/video/BV1aV411z7gR')).to.eq(
       'https://b23.tv/av414110286 = `BV1aV411z7gR`'
     )
+    expect(await getResp('https://b23.tv/kGHdWU')).to.eq(
+      'https://b23.tv/av805474857 = BV1934y1Q7HF = `b23.tv/kGHdWU`'
+    )
   })
 
   it('IAP link', async function () {
