@@ -86,7 +86,7 @@ async function handleInline(inlineQuery) {
     // see #3
     const nonVerbosedExpandedForIOS = nonVerbosed.replace(
       'b23.tv',
-      'bilibili.com'
+      'www.bilibili.com'
     )
     ret.push({
       type: 'article',
