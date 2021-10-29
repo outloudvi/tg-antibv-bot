@@ -4,6 +4,7 @@ import {
   sendMessage,
   tellSlack,
 } from './commutils'
+import { INVALID_REPL_TEXT } from './const'
 import { getResp } from './lib'
 import { getAllResolvableLinks, rand } from './utils'
 
@@ -58,7 +59,7 @@ async function handleMessage(message, change_reply_to = -1) {
 async function handleInline(inlineQuery) {
   // await tellSlack(inlineQuery)
   const resptext = await getResp(inlineQuery.query.trim())
-  const nonVerbosed = resptext.split('=')[0].trim()
+
   const ret = [
     {
       type: 'article',
@@ -69,7 +70,11 @@ async function handleInline(inlineQuery) {
         parse_mode: 'Markdown',
       },
     },
-    {
+  ]
+
+  if (resptext !== INVALID_REPL_TEXT) {
+    const nonVerbosed = resptext.split('=')[0].trim()
+    ret.push({
       type: 'article',
       id: rand(),
       title: nonVerbosed,
@@ -77,8 +82,8 @@ async function handleInline(inlineQuery) {
         message_text: nonVerbosed,
         parse_mode: 'Markdown',
       },
-    },
-  ]
+    })
+  }
 
   return await answerInlineQuery(inlineQuery.id, ret)
 }

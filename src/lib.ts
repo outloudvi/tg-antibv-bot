@@ -1,3 +1,4 @@
+import { INVALID_REPL_TEXT } from './const'
 import { LinkType } from './types'
 import {
   bv2av,
@@ -11,7 +12,7 @@ const VALID_HOSTS = ['b23.tv', 'b23.wtf']
 export async function getResp(text: string): Promise<string> {
   const links = getAllResolvableLinks(text)
   if (links.length === 0) {
-    return 'No valid av/BV/cv/b23 link found.'
+    return INVALID_REPL_TEXT
   }
   let ret: string[] = []
   for (const link of links) {

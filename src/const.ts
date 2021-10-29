@@ -1,5 +1,7 @@
 import { LinkType } from './types'
 
+export const INVALID_REPL_TEXT = 'No valid av/BV/cv/b23 link found.'
+
 const AV_ID_RGX = /av([0-9]+)/
 const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
 const CV_ID_RGX = /cv([0-9]+)/
