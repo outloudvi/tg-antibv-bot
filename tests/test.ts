@@ -68,4 +68,10 @@ describe('Library test suite', function () {
       'https://b23.tv/av846101025 = `b23.tv/mXtAjY`'
     )
   })
+
+  it('mall.bilibili.com link', async function () {
+    expect(await getResp('https://b23.tv/0xiavP')).to.eq(
+      'https://mall.bilibili.com/detail.html?itemsId=10041024 = `b23.tv/0xiavP`'
+    )
+  })
 })

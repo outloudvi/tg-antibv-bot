@@ -1,7 +1,7 @@
 import { BadUrlError } from './errors'
 import { LinkType } from './types'
 import type { TypedLink, TypedLinkSelector } from './types'
-import { REGEXES } from './const'
+import { ALLOWED_PARAMS, REGEXES } from './const'
 
 export function checkFirstNonNull(
   text: string,
@@ -103,11 +103,11 @@ export async function getHeadRedirect(
   })
     .then((x) => x.url)
     .then((x) => {
-      const u = new URL(x)
+      let u = new URL(x)
       if (u.hostname === 'd.bilibili.com') {
         return iapLinkToVideo(u)
       }
-      u.search = ''
+      sanitizeParams(u)
       return u.toString()
     })
     .catch(() => null)
@@ -115,4 +115,15 @@ export async function getHeadRedirect(
 
 export function rand(): string {
   return String(Math.random()) + String(Math.random())
+}
+
+function sanitizeParams(u: URL): URL {
+  const allowedParams = ALLOWED_PARAMS[u.hostname] || []
+  const keys = [...u.searchParams.keys()]
+  for (const i of keys) {
+    if (!allowedParams.includes(i)) {
+      u.searchParams.delete(i)
+    }
+  }
+  return u
 }
