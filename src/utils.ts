@@ -100,9 +100,11 @@ export async function getHeadRedirect(
   }
   return await fetch(url, {
     method: 'HEAD',
+    redirect: 'manual',
   })
-    .then((x) => x.url)
+    .then((x) => x.headers.get('Location'))
     .then((x) => {
+      if (x === null) return null
       let u = new URL(x)
       if (u.hostname === 'd.bilibili.com') {
         return iapLinkToVideo(u)
