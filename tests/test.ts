@@ -69,9 +69,17 @@ describe('Library test suite', function () {
     )
   })
 
-  it('mall.bilibili.com link', async function () {
+  // https://github.com/nicholascw/b23.wtf/issues/2
+  it('b23.wtf#2', async function () {
     expect(await getResp('https://b23.tv/0xiavP')).to.eq(
       'https://mall.bilibili.com/detail.html?itemsId=10041024 = `b23.tv/0xiavP`'
+    )
+  })
+
+  // https://github.com/nicholascw/b23.wtf/pull/3
+  it('b23.wtf#3', async function () {
+    expect(await getResp('https://b23.tv/uX6dMCE')).to.eq(
+      'https://m.bilibili.com/topic-detail?topic_id=6690 = `b23.tv/uX6dMCE`'
     )
   })
 })

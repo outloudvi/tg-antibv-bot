@@ -7,9 +7,9 @@ const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
 const CV_ID_RGX = /cv([0-9]+)/
 const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
 
-export const ALLOWED_PARAMS: { [hostname: string]: string[] } = {
-  'mall.bilibili.com': ['itemsId'],
-  'm.bilibili.com': ['topic_id'],
+export const ALLOWED_PARAMS: { [signature: string]: string[] } = {
+  'mall.bilibili.com/detail.html': ['itemsId'],
+  'm.bilibili.com/topic-detail': ['topic_id'],
 }
 
 export const REGEXES: [LinkType, RegExp][] = [

@@ -120,7 +120,7 @@ export function rand(): string {
 }
 
 function sanitizeParams(u: URL): URL {
-  const allowedParams = ALLOWED_PARAMS[u.hostname] || []
+  const allowedParams = ALLOWED_PARAMS[`${u.hostname}${u.pathname}`] || []
   const keys = [...u.searchParams.keys()]
   for (const i of keys) {
     if (!allowedParams.includes(i)) {
