@@ -9,6 +9,7 @@ const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
 
 export const ALLOWED_PARAMS: { [hostname: string]: string[] } = {
   'mall.bilibili.com': ['itemsId'],
+  'm.bilibili.com': ['topic_id'],
 }
 
 export const REGEXES: [LinkType, RegExp][] = [
