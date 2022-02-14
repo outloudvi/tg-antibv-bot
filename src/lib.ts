@@ -1,5 +1,5 @@
-import { INVALID_REPL_TEXT } from './const'
-import { LinkType } from './types'
+import { NO_DESTINATION_FOUND } from './const'
+import { LinkResult, LinkType } from './types'
 import {
   bv2av,
   getHeadRedirect,
@@ -7,23 +7,35 @@ import {
   typedLinkToString,
 } from './utils'
 
-const VALID_HOSTS = ['b23.tv', 'b23.wtf']
-
-export async function getResp(text: string): Promise<string> {
+export async function getResp(text: string): Promise<LinkResult[]> {
   const links = getAllResolvableLinks(text)
   if (links.length === 0) {
-    return INVALID_REPL_TEXT
+    return []
   }
-  let ret: string[] = []
+  let ret: LinkResult[] = []
   for (const link of links) {
     let { type: typ, payload: pld, source: src } = link
-    const stack = ['`' + src + '`']
+    const stack: any[] = []
     if (typ === LinkType.av || typ === LinkType.cv) {
-      return `${typedLinkToString(link, true)} = \`${src}\``
+      ret.push({
+        shortened: src,
+        ok: true,
+        intermediate: [],
+        original: typedLinkToString(link, true),
+      })
+      continue
     }
     if (typ === LinkType.b23) {
-      const pag = await getHeadRedirect(`https://b23.tv/${pld}`, VALID_HOSTS)
-      if (pag === null) continue
+      stack.pop() // we don't
+      const pag = await getHeadRedirect(`https://b23.tv/${pld}`)
+      if (pag === null) {
+        ret.push({
+          shortened: src,
+          ok: false,
+          reason: NO_DESTINATION_FOUND,
+        })
+        continue
+      }
       if (pag.startsWith('https://www.bilibili.com/video/BV')) {
         // it's a BV, push the BV typed link, needs conversion again
         typ = LinkType.bv
@@ -53,7 +65,13 @@ export async function getResp(text: string): Promise<string> {
         )
       )
     }
-    ret.push(stack.reverse().join(' = '))
+    let finalStack = stack.reverse()
+    ret.push({
+      shortened: src,
+      ok: true,
+      original: finalStack[0],
+      intermediate: finalStack.slice(1),
+    })
   }
-  return ret.join('\n')
+  return ret
 }

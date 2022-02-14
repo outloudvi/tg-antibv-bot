@@ -1,7 +1,6 @@
-import { BadUrlError } from './errors'
-import { LinkType } from './types'
+import { LinkResult, LinkType } from './types'
 import type { TypedLink, TypedLinkSelector } from './types'
-import { ALLOWED_PARAMS, REGEXES } from './const'
+import { ALLOWED_PARAMS, REGEXES, REPORT_A_BUG } from './const'
 
 export function checkFirstNonNull(
   text: string,
@@ -37,7 +36,10 @@ function tryToURL(s: any): URL | null {
   }
 }
 
-export function typedLinkToString(link: TypedLink, finalized: boolean): string {
+export function typedLinkToString(
+  link: Omit<TypedLink, 'source'>,
+  finalized: boolean
+): string {
   const payload = link.payload
   switch (link.type) {
     case LinkType.b23:
@@ -87,16 +89,9 @@ function iapLinkToVideo(iapLink: URL): string {
   return typedLinkToString(getAllResolvableLinks(preUrl)[0], true)
 }
 
-export async function getHeadRedirect(
-  url: string,
-  validHosts: string[] = []
-): Promise<string | null> {
+export async function getHeadRedirect(url: string): Promise<string | null> {
   if (!url.startsWith('https://') && !url.startsWith('http://')) {
     url = 'https://' + url
-  }
-  const target = new URL(url)
-  if (!validHosts.includes(target.hostname) && validHosts.length > 0) {
-    throw new BadUrlError(target.hostname)
   }
   return await fetch(url, {
     method: 'HEAD',
@@ -128,4 +123,23 @@ function sanitizeParams(u: URL): URL {
     }
   }
   return u
+}
+
+export function buildResponseText(response: LinkResult[]): string {
+  return (
+    response
+      .map((x) => {
+        if (x.ok) {
+          return [
+            `<a href="${x.original}">${x.original}</a>`,
+            ...x.intermediate,
+            `<code>${x.shortened}</code>`,
+          ].join(' = ')
+        } else {
+          return `Failed seeking ${x.shortened}: ${x.reason}`
+        }
+      })
+      .join('\n') +
+    (response.filter((x) => !x.ok).length > 0 ? '\n' + REPORT_A_BUG : '')
+  )
 }

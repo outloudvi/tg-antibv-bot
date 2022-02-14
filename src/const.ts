@@ -1,6 +1,8 @@
 import { LinkType } from './types'
 
-export const INVALID_REPL_TEXT = 'No valid av/BV/cv/b23 link found.'
+export const NO_URL_FOUND = 'No valid av/BV/cv/b23 link found.'
+export const NO_DESTINATION_FOUND = 'No destination found'
+export const REPORT_A_BUG = 'Consider reporting a bug: uau.li/abbbug'
 
 const AV_ID_RGX = /av([0-9]+)/
 const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/

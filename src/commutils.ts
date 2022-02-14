@@ -16,12 +16,13 @@ export async function sendMessage(
       chat_id,
       text,
       reply_to_message_id,
-      parse_mode: 'Markdown',
+      parse_mode: 'HTML',
     }),
   })
     .then((x) => x.json())
     .then((x) => {
       if (x.ok === false) throw x
+      return x
     })
     .catch(async (e) => {
       await tellSlack({
@@ -42,13 +43,14 @@ export async function editMessage(chat_id, message_id, text) {
       chat_id,
       message_id,
       text,
-      parse_mode: 'Markdown',
+      parse_mode: 'HTML',
       disable_web_page_preview: true,
     }),
   })
     .then((x) => x.json())
     .then((x) => {
       if (x.ok === false) throw x
+      return x
     })
     .catch(async (e) => {
       await tellSlack({
@@ -77,6 +79,7 @@ export async function answerInlineQuery(inline_query_id, results) {
     .then((x) => x.json())
     .then((x) => {
       if (x.ok === false) throw x
+      return x
     })
     .catch(async (e) => {
       await tellSlack({
