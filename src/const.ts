@@ -10,6 +10,7 @@ const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
 export const ALLOWED_PARAMS: { [signature: string]: string[] } = {
   'mall.bilibili.com/detail.html': ['itemsId'],
   'm.bilibili.com/topic-detail': ['topic_id'],
+  't.bilibili.com/vote/h5/index': ['vote_id'],
 }
 
 export const REGEXES: [LinkType, RegExp][] = [

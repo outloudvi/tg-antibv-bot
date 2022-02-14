@@ -82,4 +82,10 @@ describe('Library test suite', function () {
       'https://m.bilibili.com/topic-detail?topic_id=6690 = `b23.tv/uX6dMCE`'
     )
   })
+
+  it('Votes', async function () {
+    expect(await getResp('https://b23.tv/ezoXzuL')).to.eq(
+      'http://t.bilibili.com/vote/h5/index?vote_id=1976826#/result = `b23.tv/ezoXzuL`'
+    )
+  })
 })
