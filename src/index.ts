@@ -40,7 +40,7 @@ async function handleMessage(message, change_reply_to = -1) {
       `Resolving ${linkNumber} links...\n` +
         "Reduce the link number if you don't get the response.",
       change_reply_to === -1 ? message.message_id : change_reply_to
-    ).then((x) => x.result.message_id)
+    ).then((x: any) => x.result.message_id)
   }
   let response = await respPromise
   const respText =

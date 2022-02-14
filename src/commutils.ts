@@ -20,7 +20,7 @@ export async function sendMessage(
     }),
   })
     .then((x) => x.json())
-    .then((x) => {
+    .then((x: any) => {
       if (x.ok === false) throw x
       return x
     })
@@ -48,7 +48,7 @@ export async function editMessage(chat_id, message_id, text) {
     }),
   })
     .then((x) => x.json())
-    .then((x) => {
+    .then((x: any) => {
       if (x.ok === false) throw x
       return x
     })
@@ -77,7 +77,7 @@ export async function answerInlineQuery(inline_query_id, results) {
     }
   )
     .then((x) => x.json())
-    .then((x) => {
+    .then((x: any) => {
       if (x.ok === false) throw x
       return x
     })
