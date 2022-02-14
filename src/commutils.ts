@@ -20,6 +20,9 @@ export async function sendMessage(
     }),
   })
     .then((x) => x.json())
+    .then((x) => {
+      if (x.ok === false) throw x
+    })
     .catch(async (e) => {
       await tellSlack({
         err: e,
@@ -44,6 +47,9 @@ export async function editMessage(chat_id, message_id, text) {
     }),
   })
     .then((x) => x.json())
+    .then((x) => {
+      if (x.ok === false) throw x
+    })
     .catch(async (e) => {
       await tellSlack({
         err: e,
@@ -69,6 +75,9 @@ export async function answerInlineQuery(inline_query_id, results) {
     }
   )
     .then((x) => x.json())
+    .then((x) => {
+      if (x.ok === false) throw x
+    })
     .catch(async (e) => {
       await tellSlack({
         err: e,
