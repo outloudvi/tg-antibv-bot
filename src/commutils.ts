@@ -19,6 +19,14 @@ export async function sendMessage(
       parse_mode: 'Markdown',
     }),
   })
+    .then((x) => x.json())
+    .catch(async (e) => {
+      await tellSlack({
+        err: e,
+        method: 'sendMessage',
+        msg: text,
+      })
+    })
 }
 
 export async function editMessage(chat_id, message_id, text) {
@@ -35,6 +43,14 @@ export async function editMessage(chat_id, message_id, text) {
       disable_web_page_preview: true,
     }),
   })
+    .then((x) => x.json())
+    .catch(async (e) => {
+      await tellSlack({
+        err: e,
+        method: 'editMessage',
+        msg: text,
+      })
+    })
 }
 
 export async function answerInlineQuery(inline_query_id, results) {
@@ -51,7 +67,15 @@ export async function answerInlineQuery(inline_query_id, results) {
         cache_time: 600,
       }),
     }
-  ).then((x) => x.json())
+  )
+    .then((x) => x.json())
+    .catch(async (e) => {
+      await tellSlack({
+        err: e,
+        method: 'answerInlineQuery',
+        msg: results,
+      })
+    })
 }
 
 // Slack
