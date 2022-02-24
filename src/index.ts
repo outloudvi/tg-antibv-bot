@@ -86,20 +86,6 @@ async function handleInline(inlineQuery) {
           parse_mode: 'HTML',
         },
       })
-      // see #3
-      const nonVerbosedExpandedForIOS = firstResult.original.replace(
-        'b23.tv',
-        'www.bilibili.com'
-      )
-      ret.push({
-        type: 'article',
-        id: rand(),
-        title: nonVerbosedExpandedForIOS,
-        input_message_content: {
-          message_text: nonVerbosedExpandedForIOS,
-          parse_mode: 'HTML',
-        },
-      })
       // Full result with source
       const text = buildResponseText([firstResult])
       ret.push({

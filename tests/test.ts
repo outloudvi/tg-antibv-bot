@@ -28,9 +28,11 @@ describe('Library test suite', function () {
   })
 
   it('getResp (b23->BV->av)', async function () {
-    await checkUrl('b23.tv/eFXEF1', 'https://b23.tv/av328843878', [
-      'BV1CA411e7eA',
-    ])
+    await checkUrl(
+      'b23.tv/eFXEF1',
+      'https://www.bilibili.com/video/av328843878',
+      ['BV1CA411e7eA']
+    )
   })
 
   it('getResp (b23->cv)', async function () {
@@ -47,9 +49,11 @@ describe('Library test suite', function () {
   it('getResp (multiple)', async function () {
     const resp = await getResp('https://b23.tv/eFXEF1  b23.tv/osjFE5')
     expect(resp).to.deep.eq([
-      buildGoodResult('b23.tv/eFXEF1', 'https://b23.tv/av328843878', [
-        'BV1CA411e7eA',
-      ]),
+      buildGoodResult(
+        'b23.tv/eFXEF1',
+        'https://www.bilibili.com/video/av328843878',
+        ['BV1CA411e7eA']
+      ),
       buildGoodResult(
         'b23.tv/osjFE5',
         'https://www.bilibili.com/read/cv7603961',
@@ -60,15 +64,20 @@ describe('Library test suite', function () {
 
   it('special tests', async function () {
     // issue #1
-    await checkUrl('BV1aV411z7gR', 'https://b23.tv/av414110286')
+    await checkUrl('BV1aV411z7gR', 'https://www.bilibili.com/video/av414110286')
 
-    await checkUrl('b23.tv/kGHdWU', 'https://b23.tv/av805474857', [
-      'BV1934y1Q7HF',
-    ])
+    await checkUrl(
+      'b23.tv/kGHdWU',
+      'https://www.bilibili.com/video/av805474857',
+      ['BV1934y1Q7HF']
+    )
   })
 
   it('IAP link', async function () {
-    await checkUrl('b23.tv/mXtAjY', 'https://b23.tv/av846101025')
+    await checkUrl(
+      'b23.tv/mXtAjY',
+      'https://www.bilibili.com/video/av846101025'
+    )
   })
 
   // https://github.com/nicholascw/b23.wtf/issues/2

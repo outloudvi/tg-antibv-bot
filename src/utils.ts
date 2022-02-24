@@ -46,7 +46,9 @@ export function typedLinkToString(
       return `b23.tv/${payload}`
     case LinkType.av:
       // Only av can be finalized
-      return (finalized ? `https://b23.tv/` : '') + `av${payload}`
+      return (
+        (finalized ? `https://www.bilibili.com/video/` : '') + `av${payload}`
+      )
     case LinkType.bv:
       return `BV${payload}`
     case LinkType.cv:
