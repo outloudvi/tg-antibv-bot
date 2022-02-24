@@ -12,7 +12,7 @@ export function checkFirstNonNull(
     if (match !== null) rets.push([tag, match])
   }
   if (rets.length === 0) return null
-  return rets.reduce((a, b) => ((a[1].index ?? 0) < (b[1].index ?? 0) ? a : b))
+  return rets.reduce((a, b) => ((a[1].index || 0) < (b[1].index || 0) ? a : b))
 }
 
 // Return AV with **BV-prefixed** BV.
@@ -70,7 +70,7 @@ export function getAllResolvableLinks(text: string): TypedLink[] {
       source: match[1][0],
       payload: match[1][1],
     })
-    start += (match[1].index ?? 0) + match[1][0].length
+    start += (match[1].index || 0) + match[1][0].length
   }
   return ret
 }
