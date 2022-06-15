@@ -80,7 +80,7 @@ async function handleInline(inlineQuery) {
       ret.push({
         type: 'article',
         id: rand(),
-        title: firstResult.original,
+        title: 'av-id result only',
         input_message_content: {
           message_text: firstResult.original,
           parse_mode: 'HTML',
@@ -91,7 +91,7 @@ async function handleInline(inlineQuery) {
       ret.push({
         type: 'article',
         id: rand(),
-        title: text,
+        title: 'av-id result with source',
         input_message_content: {
           message_text: text,
           parse_mode: 'HTML',
@@ -101,7 +101,7 @@ async function handleInline(inlineQuery) {
       ret.push({
         type: 'article',
         id: rand(),
-        title: firstResult.reason,
+        title: 'Failed to parse',
         description: REPORT_A_BUG,
         input_message_content: {
           message_text: firstResult.reason,
