@@ -93,6 +93,10 @@ export async function answerInlineQuery(inline_query_id, results) {
 // Slack
 
 export async function tellSlack(obj) {
+  if (!SLACK_WEBHOOK_URL) {
+    console.warn('SLACK_WEBHOOK_URL is absent, skipping.')
+    return
+  }
   await fetch(SLACK_WEBHOOK_URL, {
     method: 'POST',
     headers: {
