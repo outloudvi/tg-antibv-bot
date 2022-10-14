@@ -1,9 +1,8 @@
 account_id = ""
 compatibility_date = "2022-06-15"
+main = "src/index.ts"
 name = "anti-bv-bot"
 route = ""
-type = "webpack"
-webpack_config = "webpack.config.js"
 workers_dev = true
 zone_id = ""
 

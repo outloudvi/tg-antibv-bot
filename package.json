@@ -14,12 +14,11 @@
   },
   "scripts": {
     "test": "mocha tests/**/*.ts -r ts-node/register --timeout 5000",
-    "publish:prod": "tsc && wrangler publish --env prod",
-    "build": "tsc",
-    "build:watch": "tsc -w"
+    "publish:prod": "wrangler publish --env=prod --outdir=dist",
+    "build": "wrangler publish --outdir=dist --dry-run"
   },
   "name": "tg-antibv-bot",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Telegram bot that fixes the URL obfuscation of a famous video sharing website.",
   "main": "index.js",
   "repository": "https://github.com/outloudvi/tg-antibv-bot",
