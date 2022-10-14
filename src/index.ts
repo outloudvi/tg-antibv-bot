@@ -46,7 +46,11 @@ async function handleMessage(message, change_reply_to = -1) {
   const respText =
     response.length > 0 ? buildResponseText(response) : NO_URL_FOUND
   if (currWaitingMessage) {
-    await editMessage(message.chat.id, currWaitingMessage, response)
+    await editMessage(
+      message.chat.id,
+      currWaitingMessage,
+      buildResponseText(response)
+    )
   } else {
     await sendMessage(
       message.chat.id,

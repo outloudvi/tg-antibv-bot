@@ -33,7 +33,11 @@ export async function sendMessage(
     })
 }
 
-export async function editMessage(chat_id, message_id, text) {
+export async function editMessage(
+  chat_id: number,
+  message_id: number,
+  text: string
+) {
   return await fetch(`https://api.telegram.org/bot${BOT_KEY}/editMessageText`, {
     method: 'POST',
     headers: {
