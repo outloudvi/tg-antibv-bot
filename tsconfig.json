@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2020",
+    "module": "es2022",
+    "target": "es2021",
     "esModuleInterop": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
@@ -11,14 +11,21 @@
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "lib": ["ES2020"],
+    "isolatedModules": true,
+    "lib": [
+      "ES2021"
+    ],
     "resolveJsonModule": true,
-    "types": ["@cloudflare/workers-types", "mocha"],
-    "typeRoots": ["node_modules/@types", "index.d.ts"]
+    "types": [
+      "@cloudflare/workers-types",
+      "mocha"
+    ]
   },
   "include": [
-    "src/**/*.ts",
-    "./node_modules/@cloudflare/workers-types/index.d.ts"
+    "src/**/*.ts"
   ],
-  "exclude": ["node_modules/", "dist/"]
+  "exclude": [
+    "node_modules/",
+    "dist/"
+  ]
 }

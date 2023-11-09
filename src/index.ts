@@ -8,10 +8,6 @@ import { NO_URL_FOUND, REPORT_A_BUG } from './const'
 import { getResp } from './lib'
 import { buildResponseText, getAllResolvableLinks, rand } from './utils'
 
-addEventListener('fetch', (event) => {
-  event.respondWith(handleRequest(event.request))
-})
-
 async function handleMessage(message, change_reply_to = -1) {
   // Ignore /start in PM
   if (
@@ -153,3 +149,9 @@ async function handleRequest(request: Request): Promise<Response> {
   }
   return new Response('OK', { status: 200 })
 }
+
+export default {
+	async fetch(request: Request): Promise<Response> {
+		return handleRequest(request)
+	},
+};
