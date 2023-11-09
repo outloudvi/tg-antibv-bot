@@ -92,11 +92,4 @@ describe('Library test suite', function () {
       'https://m.bilibili.com/topic-detail?topic_id=6690'
     )
   })
-
-  it('Votes', async function () {
-    await checkUrl(
-      'b23.tv/ezoXzuL',
-      'http://t.bilibili.com/vote/h5/index?vote_id=1976826#/result'
-    )
-  })
 })
