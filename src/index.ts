@@ -130,6 +130,14 @@ async function handler(request) {
  */
 async function handleRequest(request: Request): Promise<Response> {
   let path = new URL(request.url).pathname
+  if (path === '/' && request.method === 'GET') {
+    return new Response(
+      `
+      BOT_KEY ready: ${globalObject.BOT_KEY.length > 0} <br/>
+    `,
+      { status: 200 }
+    )
+  }
   try {
     await handler(request)
   } catch (e) {}
