@@ -24,13 +24,7 @@ export async function sendMessage(
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {
-      await tellSlack({
-        err: e,
-        method: 'sendMessage',
-        msg: text,
-      })
-    })
+    .catch(async (e) => {})
 }
 
 export async function editMessage(
@@ -56,13 +50,7 @@ export async function editMessage(
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {
-      await tellSlack({
-        err: e,
-        method: 'editMessage',
-        msg: text,
-      })
-    })
+    .catch(async (e) => {})
 }
 
 export async function answerInlineQuery(inline_query_id, results) {
@@ -85,29 +73,5 @@ export async function answerInlineQuery(inline_query_id, results) {
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {
-      await tellSlack({
-        err: e,
-        method: 'answerInlineQuery',
-        msg: results,
-      })
-    })
-}
-
-// Slack
-
-export async function tellSlack(obj) {
-  if (!SLACK_WEBHOOK_URL) {
-    console.warn('SLACK_WEBHOOK_URL is absent, skipping.')
-    return
-  }
-  await fetch(SLACK_WEBHOOK_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify({
-      text: typeof obj === 'object' ? JSON.stringify(obj) : String(obj),
-    }),
-  })
+    .catch(async (e) => {})
 }

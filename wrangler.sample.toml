@@ -4,4 +4,3 @@ name = "anti-bv-bot"
 
 [vars]
 BOT_KEY = "BOT_KEY"
-SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/wh/at/ever"

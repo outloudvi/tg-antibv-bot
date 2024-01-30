@@ -1,9 +1,4 @@
-import {
-  answerInlineQuery,
-  editMessage,
-  sendMessage,
-  tellSlack,
-} from './commutils'
+import { answerInlineQuery, editMessage, sendMessage } from './commutils'
 import { NO_URL_FOUND, REPORT_A_BUG } from './const'
 import { getResp } from './lib'
 import { buildResponseText, getAllResolvableLinks, rand } from './utils'
@@ -135,12 +130,7 @@ async function handleRequest(request: Request): Promise<Response> {
   let path = new URL(request.url).pathname
   try {
     await handler(request)
-  } catch (e) {
-    await tellSlack({
-      error: String(e),
-      stack: (e as Error).stack || [],
-    })
-  }
+  } catch (e) {}
   return new Response('OK', { status: 200 })
 }
 
