@@ -133,12 +133,6 @@ async function handler(request) {
  */
 async function handleRequest(request: Request): Promise<Response> {
   let path = new URL(request.url).pathname
-  if (path == '/acct') {
-    const resp = await fetch(
-      `https://api.telegram.org/bot${BOT_KEY}/setWebhook?url=${BASEURL}`
-    )
-    return resp.clone()
-  }
   try {
     await handler(request)
   } catch (e) {
@@ -151,7 +145,7 @@ async function handleRequest(request: Request): Promise<Response> {
 }
 
 export default {
-	async fetch(request: Request): Promise<Response> {
-		return handleRequest(request)
-	},
-};
+  async fetch(request: Request): Promise<Response> {
+    return handleRequest(request)
+  },
+}

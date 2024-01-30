@@ -3,6 +3,5 @@ main = "src/index.ts"
 name = "anti-bv-bot"
 
 [vars]
-BASEURL = "https://anti-bv-bot-prod.example.workers.dev/"
 BOT_KEY = "BOT_KEY"
 SLACK_WEBHOOK_URL = "https://hooks.slack.com/services/wh/at/ever"
