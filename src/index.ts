@@ -1,6 +1,8 @@
 import { answerInlineQuery, editMessage, sendMessage } from './commutils'
 import { NO_URL_FOUND, REPORT_A_BUG } from './const'
+import globalObject from './globalObject'
 import { getResp } from './lib'
+import { Env } from './types'
 import { buildResponseText, getAllResolvableLinks, rand } from './utils'
 
 async function handleMessage(message, change_reply_to = -1) {
@@ -135,7 +137,8 @@ async function handleRequest(request: Request): Promise<Response> {
 }
 
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    globalObject.BOT_KEY = env.BOT_KEY
     return handleRequest(request)
   },
 }

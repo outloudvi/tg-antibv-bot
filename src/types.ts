@@ -1,3 +1,7 @@
+export type Env = {
+  BOT_KEY: string
+}
+
 export enum LinkType {
   bv,
   av,

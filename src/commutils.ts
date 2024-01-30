@@ -1,24 +1,21 @@
-/// <reference types="./global" />
+import globalObject from './globalObject'
 
-// Telegram
-
-export async function sendMessage(
-  chat_id,
-  text,
-  reply_to_message_id = undefined
-) {
-  return await fetch(`https://api.telegram.org/bot${BOT_KEY}/sendMessage`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify({
-      chat_id,
-      text,
-      reply_to_message_id,
-      parse_mode: 'HTML',
-    }),
-  })
+export function sendMessage(chat_id, text, reply_to_message_id = undefined) {
+  return fetch(
+    `https://api.telegram.org/bot${globalObject.BOT_KEY}/sendMessage`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        chat_id,
+        text,
+        reply_to_message_id,
+        parse_mode: 'HTML',
+      }),
+    }
+  )
     .then((x) => x.json())
     .then((x: any) => {
       if (x.ok === false) throw x
@@ -27,24 +24,23 @@ export async function sendMessage(
     .catch(async (e) => {})
 }
 
-export async function editMessage(
-  chat_id: number,
-  message_id: number,
-  text: string
-) {
-  return await fetch(`https://api.telegram.org/bot${BOT_KEY}/editMessageText`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json; charset=utf-8',
-    },
-    body: JSON.stringify({
-      chat_id,
-      message_id,
-      text,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-    }),
-  })
+export function editMessage(chat_id: number, message_id: number, text: string) {
+  return fetch(
+    `https://api.telegram.org/bot${globalObject.BOT_KEY}/editMessageText`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        chat_id,
+        message_id,
+        text,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+      }),
+    }
+  )
     .then((x) => x.json())
     .then((x: any) => {
       if (x.ok === false) throw x
@@ -53,9 +49,9 @@ export async function editMessage(
     .catch(async (e) => {})
 }
 
-export async function answerInlineQuery(inline_query_id, results) {
-  const ret = await fetch(
-    `https://api.telegram.org/bot${BOT_KEY}/answerInlineQuery`,
+export function answerInlineQuery(inline_query_id, results) {
+  return fetch(
+    `https://api.telegram.org/bot${globalObject.BOT_KEY}/answerInlineQuery`,
     {
       method: 'POST',
       headers: {
