@@ -25,7 +25,8 @@ export function bv2av(bv: string): string {
 
   let r = 0
   for (let i = 0; i < pos.length; i++) r += table[bv[pos[i]]] * 58 ** i
-  return String((r - 8728348608) ^ 177451812)
+  const finalId = (r - 8728348608) ^ 177451812
+  return String(finalId > 0 ? finalId : finalId + Math.pow(2, 31))
 }
 
 function tryToURL(s: any): URL | null {

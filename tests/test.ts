@@ -24,6 +24,10 @@ describe('Library test suite', function () {
     expect(bv2av('BV1Nt4y1D7pW')).to.eq('626524324')
   })
 
+  it('bv2av - #4', function () {
+    expect(bv2av('BV1rZ421z71a')).to.eq('1150234396')
+  })
+
   it('getResp (b23->BV->av)', async function () {
     await checkUrl(
       'b23.tv/eFXEF1',
