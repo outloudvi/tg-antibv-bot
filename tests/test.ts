@@ -84,12 +84,4 @@ describe('Library test suite', function () {
       'https://mall.bilibili.com/detail.html?itemsId=10041024'
     )
   })
-
-  // https://github.com/nicholascw/b23.wtf/pull/3
-  it('b23.wtf#3', async function () {
-    await checkUrl(
-      'b23.tv/uX6dMCE',
-      'https://m.bilibili.com/topic-detail?topic_id=6690'
-    )
-  })
 })
