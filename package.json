@@ -9,20 +9,22 @@
   "private": true,
   "scripts": {
     "test": "mocha tests/**/*.ts -r esbuild-register --timeout 5000",
-    "deploy": "wrangler deploy --env=prod",
-    "dev": "wrangler dev",
+    "deploy": "pnpx wrangler deploy --env=prod",
     "start": "wrangler dev",
-    "build": "wrangler deploy --dry-run"
+    "build": "pnpx wrangler deploy --dry-run"
+  },
+  "engines": {
+    "node": ">20"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20231025.0",
-    "@types/mocha": "^10.0.4",
-    "@types/node": "^20.9.0",
-    "chai": "^4.3.10",
+    "@cloudflare/workers-types": "^4.20240129.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.10",
+    "chai": "^5.0.3",
     "esbuild-register": "^3.5.0",
-    "eslint": "^8.53.0",
+    "eslint": "^8.56.0",
     "mocha": "^10.2.0",
-    "typescript": "^5.2.2",
-    "wrangler": "^3.15.0"
+    "typescript": "^5.3.3",
+    "wrangler": "^3.25.0"
   }
 }

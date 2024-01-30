@@ -12,20 +12,11 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "isolatedModules": true,
-    "lib": [
-      "ES2021"
-    ],
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["ES2021"],
     "resolveJsonModule": true,
-    "types": [
-      "@cloudflare/workers-types",
-      "mocha"
-    ]
+    "types": ["@cloudflare/workers-types", "mocha"]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules/",
-    "dist/"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules/", "dist/"]
 }
