@@ -21,7 +21,7 @@ export function sendMessage(chat_id, text, reply_to_message_id = undefined) {
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {})
+    .catch(console.error)
 }
 
 export function editMessage(chat_id: number, message_id: number, text: string) {
@@ -46,7 +46,7 @@ export function editMessage(chat_id: number, message_id: number, text: string) {
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {})
+    .catch(console.error)
 }
 
 export function answerInlineQuery(inline_query_id, results) {
@@ -69,5 +69,5 @@ export function answerInlineQuery(inline_query_id, results) {
       if (x.ok === false) throw x
       return x
     })
-    .catch(async (e) => {})
+    .catch(console.error)
 }
