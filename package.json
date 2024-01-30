@@ -14,7 +14,7 @@
     "build": "pnpx wrangler deploy --dry-run"
   },
   "engines": {
-    "node": ">20"
+    "node": ">=20"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240129.0",
