@@ -1,5 +1,4 @@
 node_modules/
 /worker
 /dist
-wrangler.toml
 .dev.vars
