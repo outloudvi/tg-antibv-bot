@@ -111,9 +111,14 @@ async function handleInline(inlineQuery) {
   return await answerInlineQuery(inlineQuery.id, ret)
 }
 
-async function handler(request) {
+async function handler(request: Request) {
   if (request.method != 'POST') return
-  const body = await request.json().catch(() => {
+  if (
+    request.headers.get('X-Telegram-Bot-Api-Secret-Token') !==
+    globalObject.HOOK_SECRET
+  )
+    return
+  const body: any = await request.json().catch(() => {
     return {}
   })
   if (body.message) {
@@ -124,19 +129,30 @@ async function handler(request) {
   return {}
 }
 
+async function handleWebhookSet(requestUrl: URL): Promise<Response> {
+  const givenBotToken = requestUrl.searchParams.get('bot_token')
+  if (givenBotToken !== globalObject.BOT_KEY) {
+    return new Response("Bot token doesn't match", {
+      status: 403,
+    })
+  }
+
+  requestUrl.search = ''
+  const webhookUrl = String(requestUrl)
+  await fetch(
+    `https://api.telegram.org/bot${givenBotToken}/setWebhook?url=${webhookUrl}&secret_token=${globalObject.HOOK_SECRET}`
+  )
+  return new Response(`Webhook set with the URL ${webhookUrl}`)
+}
+
 /**
  *
  * @param {Request} request
  */
 async function handleRequest(request: Request): Promise<Response> {
-  let path = new URL(request.url).pathname
-  if (path === '/' && request.method === 'GET') {
-    return new Response(
-      `
-      BOT_KEY ready: ${globalObject.BOT_KEY.length > 0} <br/>
-    `,
-      { status: 200 }
-    )
+  const requestUrl = new URL(request.url)
+  if (requestUrl.pathname === '/' && request.method === 'GET') {
+    return handleWebhookSet(requestUrl)
   }
   try {
     await handler(request)
@@ -147,6 +163,7 @@ async function handleRequest(request: Request): Promise<Response> {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     globalObject.BOT_KEY = env.BOT_KEY
+    globalObject.HOOK_SECRET = env.BOT_KEY.slice(-8)
     return handleRequest(request)
   },
 }
