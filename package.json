@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "test": "mocha tests/**/*.ts -r esbuild-register --timeout 5000",
-    "deploy": "pnpx wrangler deploy --env=prod",
+    "deploy": "pnpx wrangler deploy",
     "start": "wrangler dev",
     "build": "pnpx wrangler deploy --dry-run"
   },
