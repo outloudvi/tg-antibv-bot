@@ -16,17 +16,23 @@ export function checkFirstNonNull(
 }
 
 // Return AV with **BV-prefixed** BV.
-// https://www.zhihu.com/question/381784377/answer/1099438784
-export function bv2av(bv: string): string {
-  const pos = [11, 10, 3, 8, 4, 6]
-  const base = 'fZodR9XQDSUm21yCkr6zBqiveYah8bt4xsWpHnJE7jL5VG3guMTKNPAwcF'
-  const table = {}
-  for (let i = 0; i < base.length; i++) table[base[i]] = i
+// https://socialsisteryi.github.io/bilibili-API-collect/docs/misc/bvid_desc.html#bv-av%E7%AE%97%E6%B3%95
+const XOR_CODE = 23442827791579n
+const MASK_CODE = 2251799813685247n
+const BASE = 58n
 
-  let r = 0
-  for (let i = 0; i < pos.length; i++) r += table[bv[pos[i]]] * 58 ** i
-  const finalId = (r - 8728348608) ^ 177451812
-  return String(finalId > 0 ? finalId : finalId + Math.pow(2, 31))
+const data = 'FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf'
+
+export function bv2av(bvid: string) {
+  const bvidArr = Array.from(bvid)
+  ;[bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]]
+  ;[bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]]
+  bvidArr.splice(0, 3)
+  const tmp = bvidArr.reduce(
+    (pre, bvidChar) => pre * BASE + BigInt(data.indexOf(bvidChar)),
+    0n
+  )
+  return String((tmp & MASK_CODE) ^ XOR_CODE)
 }
 
 function tryToURL(s: any): URL | null {
