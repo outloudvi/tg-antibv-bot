@@ -27,7 +27,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
     }
     if (typ === LinkType.b23) {
       stack.pop() // we don't
-      const pag = await getHeadRedirect(`https://b23.tv/${pld}`)
+      const pag = await getHeadRedirect(`https://bili2233.cn/${pld}`)
       if (pag === null) {
         ret.push({
           shortened: src,
