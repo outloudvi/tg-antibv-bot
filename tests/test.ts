@@ -92,4 +92,12 @@ describe('Library test suite', function () {
       'https://mall.bilibili.com/detail.html?itemsId=10041024'
     )
   })
+
+  it('#7', async function () {
+    await checkUrl(
+      'bili2233.cn/BmOPBLD',
+      'https://www.bilibili.com/video/av113747427330355',
+      ['BV18A6HYQEyd']
+    )
+  })
 })
