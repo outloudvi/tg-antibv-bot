@@ -9,12 +9,16 @@ import { LinkResultGood } from '../src/types'
 function buildGoodResult(
   shortened: string,
   original: string,
-  intermediate: string[]
+  intermediate: string[],
 ): LinkResultGood {
   return { ok: true, original, shortened, intermediate }
 }
 
-async function checkUrl(shortened, original, intermediate: string[] = []) {
+async function checkUrl(
+  shortened: string,
+  original: string,
+  intermediate: string[] = [],
+) {
   const ret = await getResp(shortened)
   expect(ret[0]).to.deep.eq(buildGoodResult(shortened, original, intermediate))
 }
@@ -32,11 +36,20 @@ describe('Library test suite', function () {
     expect(bv2av('BV1L9Uoa9EUx')).to.eq('111298867365120')
   })
 
-  it('#7', async function () {
+  // FIXME: b23.tv short links will expire; may not be a good way to test
+  // it('#7', async function () {
+  //   await checkUrl(
+  //     'bili2233.cn/BmOPBLD',
+  //     'https://www.bilibili.com/video/av113747427330355',
+  //     ['BV18A6HYQEyd'],
+  //   )
+  // })
+
+  it('#8', async function () {
     await checkUrl(
-      'bili2233.cn/BmOPBLD',
-      'https://www.bilibili.com/video/av113747427330355',
-      ['BV18A6HYQEyd']
+      'av116624887646402?t=1316',
+      'https://www.bilibili.com/video/av116624887646402?t=1316',
+      [],
     )
   })
 })
