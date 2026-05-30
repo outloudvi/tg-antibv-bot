@@ -4,8 +4,8 @@ export const NO_URL_FOUND = 'No valid av/BV/cv/b23 link found.'
 export const NO_DESTINATION_FOUND = 'No destination found'
 export const REPORT_A_BUG = 'Consider reporting a bug: uau.li/abbbug'
 
-const AV_ID_RGX = /av([0-9]+)/
-const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)/
+const AV_ID_RGX = /av([0-9]+)(?:[/?][^\s]*\bt=(\d+))?/
+const BV_ID_RGX = /BV([1-9A-HJ-NP-Za-km-z]+)(?:[/?][^\s]*\bt=(\d+))?/
 const CV_ID_RGX = /cv([0-9]+)/
 const B23_URL_RGX = /b23.(?:tv|wtf)\/([A-Za-z0-9]+)/
 const BILI2233_URL_RGX = /bili2233.cn\/([A-Za-z0-9]+)/

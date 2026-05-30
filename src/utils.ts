@@ -48,19 +48,20 @@ export function typedLinkToString(
   finalized: boolean
 ): string {
   const payload = link.payload
+  const timeStr = link.time ? `?t=${link.time}` : ''
   switch (link.type) {
     case LinkType.b23:
-      return `b23.tv/${payload}`
+      return `b23.tv/${payload}${timeStr}`
     case LinkType.av:
       // Only av can be finalized
       return (
-        (finalized ? `https://www.bilibili.com/video/` : '') + `av${payload}`
+        ((finalized ? `https://www.bilibili.com/video/` : '') + `av${payload}${timeStr}`)
       )
     case LinkType.bv:
-      return `BV${payload}`
+      return `BV${payload}${timeStr}`
     case LinkType.cv:
       return (
-        (finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}`
+        ((finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}${timeStr}`)
       )
   }
 }
@@ -76,6 +77,7 @@ export function getAllResolvableLinks(text: string): TypedLink[] {
       type: match[0],
       source: match[1][0],
       payload: match[1][1],
+      time: match[1][2]
     })
     start += (match[1].index || 0) + match[1][0].length
   }
@@ -127,7 +129,7 @@ function sanitizeParams(u: URL): URL {
   const allowedParams = ALLOWED_PARAMS[`${u.hostname}${u.pathname}`] || []
   const keys = [...u.searchParams.keys()]
   for (const i of keys) {
-    if (!allowedParams.includes(i)) {
+    if (!allowedParams.includes(i) && i !== 't') {
       u.searchParams.delete(i)
     }
   }

@@ -14,7 +14,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
   }
   let ret: LinkResult[] = []
   for (const link of links) {
-    let { type: typ, payload: pld, source: src } = link
+    let { type: typ, payload: pld, source: src, time } = link
     const stack: any[] = []
     if (typ === LinkType.av || typ === LinkType.cv) {
       ret.push({
@@ -39,12 +39,16 @@ export async function getResp(text: string): Promise<LinkResult[]> {
       if (pag.startsWith('https://www.bilibili.com/video/BV')) {
         // it's a BV, push the BV typed link, needs conversion again
         typ = LinkType.bv
-        pld = pag.replace('https://www.bilibili.com/video/BV', '')
+        const u = new URL(pag)
+        const bvMatch = u.pathname.match(/BV([1-9A-HJ-NP-Za-km-z]+)/)
+        pld = bvMatch ? bvMatch[1] : pld
+        time = u.searchParams.get('t') || time 
         stack.push(
           typedLinkToString(
             {
               type: typ, // Must be bv
               payload: pld,
+              time
             },
             false
           )
@@ -60,6 +64,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
           {
             type: LinkType.av,
             payload: bv2av('BV' + pld),
+            time,
           },
           true
         )
