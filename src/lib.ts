@@ -15,10 +15,13 @@ export async function getResp(text: string): Promise<LinkResult[]> {
   let ret: LinkResult[] = []
   for (const link of links) {
     let { type: typ, payload: pld, source: src, time } = link
+    // Clean the shortened URL
+    const cleanSrc = typedLinkToString(link, false)
+    
     const stack: any[] = []
     if (typ === LinkType.av || typ === LinkType.cv) {
       ret.push({
-        shortened: src,
+        shortened: cleanSrc,
         ok: true,
         intermediate: [],
         original: typedLinkToString(link, true),
@@ -30,7 +33,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
       const pag = await getHeadRedirect(`https://bili2233.cn/${pld}`)
       if (pag === null) {
         ret.push({
-          shortened: src,
+          shortened: cleanSrc,
           ok: false,
           reason: NO_DESTINATION_FOUND,
         })
@@ -72,7 +75,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
     }
     let finalStack = stack.reverse()
     ret.push({
-      shortened: src,
+      shortened: cleanSrc,
       ok: true,
       original: finalStack[0],
       intermediate: finalStack.slice(1),

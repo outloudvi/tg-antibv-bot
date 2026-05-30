@@ -15,6 +15,7 @@ export interface TypedLink {
   type: LinkType
   payload: string
   source: string
+  time?: string
 }
 
 type LinkResultBad = {
