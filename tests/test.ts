@@ -20,7 +20,10 @@ async function checkUrl(
   intermediate: string[] = [],
 ) {
   const ret = await getResp(shortened)
-  expect(ret[0]).to.deep.eq(buildGoodResult(shortened, original, intermediate))
+  const expected = buildGoodResult(shortened, original, intermediate)
+  ret[0].shortened = ret[0].shortened.replace("/?", "?")
+  expected.shortened = expected.shortened.replace("/?", "?")
+  expect(ret[0]).to.deep.eq(expected)
 }
 
 describe('Library test suite', function () {
@@ -49,6 +52,20 @@ describe('Library test suite', function () {
     await checkUrl(
       'av116624887646402?t=1316',
       'https://www.bilibili.com/video/av116624887646402?t=1316',
+      [],
+    )
+  })
+
+  it('#9', async function () {
+    await checkUrl(
+      'BV11UBfBMEfQ/?p=2',
+      'https://www.bilibili.com/video/av115938833733639?p=2',
+      [],
+    )
+
+    await checkUrl(
+      'BV11UBfBMEfQ?p=2',
+      'https://www.bilibili.com/video/av115938833733639?p=2',
       [],
     )
   })

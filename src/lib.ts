@@ -14,10 +14,11 @@ export async function getResp(text: string): Promise<LinkResult[]> {
   }
   let ret: LinkResult[] = []
   for (const link of links) {
-    let { type: typ, payload: pld, source: src, time } = link
+    let { type: typ, payload: pld, source: src, time, page } = link
+    console.log("!!", time, page)
     // Clean the shortened URL
     const cleanSrc = typedLinkToString(link, false)
-    
+
     const stack: any[] = []
     if (typ === LinkType.av || typ === LinkType.cv) {
       ret.push({
@@ -45,13 +46,15 @@ export async function getResp(text: string): Promise<LinkResult[]> {
         const u = new URL(pag)
         const bvMatch = u.pathname.match(/BV([1-9A-HJ-NP-Za-km-z]+)/)
         pld = bvMatch ? bvMatch[1] : pld
-        time = u.searchParams.get('t') || time 
+        time = u.searchParams.get('t') || time
+        page = u.searchParams.get('p') || page
         stack.push(
           typedLinkToString(
             {
               type: typ, // Must be bv
               payload: pld,
-              time
+              time,
+              page,
             },
             false
           )
@@ -68,6 +71,7 @@ export async function getResp(text: string): Promise<LinkResult[]> {
             type: LinkType.av,
             payload: bv2av('BV' + pld),
             time,
+            page,
           },
           true
         )

@@ -25,8 +25,8 @@ const data = 'FcwAPNKTMug3GV5Lj7EJnHpWsx4tb8haYeviqBz6rkCy12mUSDQX9RdoZf'
 
 export function bv2av(bvid: string) {
   const bvidArr = Array.from(bvid)
-  ;[bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]]
-  ;[bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]]
+    ;[bvidArr[3], bvidArr[9]] = [bvidArr[9], bvidArr[3]]
+    ;[bvidArr[4], bvidArr[7]] = [bvidArr[7], bvidArr[4]]
   bvidArr.splice(0, 3)
   const tmp = bvidArr.reduce(
     (pre, bvidChar) => pre * BASE + BigInt(data.indexOf(bvidChar)),
@@ -43,27 +43,45 @@ function tryToURL(s: any): URL | null {
   }
 }
 
+function buildQueryString(link: Omit<TypedLink, 'source'>): string {
+  const params: string[] = []
+  if (link.page) params.push(`p=${link.page}`)
+  if (link.time) params.push(`t=${link.time}`)
+  return params.length > 0 ? `?${params.join('&')}` : ''
+}
+
 export function typedLinkToString(
   link: Omit<TypedLink, 'source'>,
   finalized: boolean
 ): string {
   const payload = link.payload
-  const timeStr = link.time ? `?t=${link.time}` : ''
+  const queryStr = buildQueryString(link)
   switch (link.type) {
     case LinkType.b23:
-      return `b23.tv/${payload}${timeStr}`
+      return `b23.tv/${payload}${queryStr}`
     case LinkType.av:
       // Only av can be finalized
       return (
-        ((finalized ? `https://www.bilibili.com/video/` : '') + `av${payload}${timeStr}`)
+        ((finalized ? `https://www.bilibili.com/video/` : '') + `av${payload}${queryStr}`)
       )
     case LinkType.bv:
-      return `BV${payload}${timeStr}`
+      return `BV${payload}${queryStr}`
     case LinkType.cv:
       return (
-        ((finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}${timeStr}`)
+        ((finalized ? `https://www.bilibili.com/read/` : '') + `cv${payload}${queryStr}`)
       )
   }
+}
+
+function extractParams(query: string | undefined): {
+  time?: string
+  page?: string
+} {
+  if (!query) return {}
+  const params = new URLSearchParams(query.replace(/^[?/]/, ''))
+  const time = params.get('t') || undefined
+  const page = params.get('p') || undefined
+  return { time, page }
 }
 
 export function getAllResolvableLinks(text: string): TypedLink[] {
@@ -73,11 +91,15 @@ export function getAllResolvableLinks(text: string): TypedLink[] {
     const curr = text.slice(start)
     const match = checkFirstNonNull(curr, REGEXES)
     if (match === null) break
+
+    const { time, page } = extractParams(match[1][2])
+    console.log("py", match)
     ret.push({
       type: match[0],
       source: match[1][0],
       payload: match[1][1],
-      time: match[1][2]
+      time,
+      page,
     })
     start += (match[1].index || 0) + match[1][0].length
   }
@@ -126,10 +148,10 @@ export function rand(): string {
 }
 
 function sanitizeParams(u: URL): URL {
-  const allowedParams = ALLOWED_PARAMS[`${u.hostname}${u.pathname}`] || []
+  const allowedParams = ALLOWED_PARAMS[`${u.hostname}${u.pathname}`] ?? ["t", "p"]
   const keys = [...u.searchParams.keys()]
   for (const i of keys) {
-    if (!allowedParams.includes(i) && i !== 't') {
+    if (!allowedParams.includes(i)) {
       u.searchParams.delete(i)
     }
   }
